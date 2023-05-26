@@ -1,8 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flavor_hive/widgets/item_input.dart';
 import 'package:flavor_hive/widgets/item_tile.dart';
 import 'package:flutter/material.dart';
 
-import 'models/item.dart';
 import 'widgets/sub_header.dart';
 
 class ChatPage extends StatefulWidget {
@@ -14,7 +14,16 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller1 = TextEditingController();
-  final List<Item> _items = [];
+  final List<String> _items = [];
+
+  late DatabaseReference dbRef;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRef = FirebaseDatabase.instance.ref().child('Recipes');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +53,7 @@ class _ChatPageState extends State<ChatPage> {
                     controller: _controller1,
                     onPressed: () {
                       setState(() {
-                        final message = Item(_controller1.text);
+                        final message = _controller1.text;
                         _items.add(message);
                       });
                       _controller1.clear();
@@ -70,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
                         padding: const EdgeInsets.all(8),
                         itemCount: _items.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return ItemTile(message: _items[index].text);
+                          return ItemTile(message: _items[index]);
                         }),
                   ),
                 ),
@@ -89,7 +98,14 @@ class _ChatPageState extends State<ChatPage> {
                             backgroundColor:
                             MaterialStatePropertyAll<Color>(Colors.black),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Map<String, Object> recipes = {
+                              'username': "User2",
+                              'recipes' : _items
+                            };
+                            print(recipes);
+                            dbRef.push().set(recipes);
+                          },
                           child: const Text('Go'),
                         ),
                       ],

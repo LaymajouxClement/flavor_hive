@@ -39,6 +39,8 @@ dependencies:
 
   # Firebase Database
   cloud_firestore: ^4.7.1
+  uuid: ^3.0.7
+  firebase_database: ^10.2.1
 
 dev_dependencies:
   flutter_test:
