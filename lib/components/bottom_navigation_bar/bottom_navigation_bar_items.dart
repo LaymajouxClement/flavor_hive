@@ -14,7 +14,7 @@ class BottomNavigationBarItems extends StatelessWidget {
       case 0:
         return const HomeScreen();
       case 1:
-        return const RecetteScreen();
+        return RecetteScreen();
       case 2:
         return const IngredientsScreen();
       case 3:
