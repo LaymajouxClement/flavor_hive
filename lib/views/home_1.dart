@@ -53,23 +53,25 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
             Expanded(
               child: Container(
                 // color: Colors.amber,
-                padding: const EdgeInsets.all(20),
-                width: 300.0,
+                padding: const EdgeInsets.all(10),
+                width: Size.infinite.height,
                 decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: Color(0xFFDFDFDF)),
-                    left: BorderSide(color: Color(0xFFDFDFDF)),
-                    right: BorderSide(color: Color(0xFF7F7F7F)),
-                    bottom: BorderSide(color: Color(0xFF7F7F7F)),
-                  ),
-                  // color: Color(0xFFBFBFBF),
                 ),
                 child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
                     itemCount: _items.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ItemTile(message: _items[index]);
-                    }),
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                        key: Key(_items[index]),
+                        onDismissed: (direction) {
+                          setState(() {
+                            _items.removeAt(index);
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_items[index]} deleted')));
+                        },
+                        child: ItemTile(message: _items[index]),
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(
@@ -93,7 +95,7 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
                           'recipes' : _items
                         };
                         print(recipes);
-                        dbRef.push().set(recipes);
+                        // dbRef.push().set(recipes);
                       },
                       child: const Text('Go'),
                     ),

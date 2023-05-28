@@ -6,13 +6,17 @@ class ItemTile extends StatelessWidget {
   final String message;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Flexible(
-          child: Text("> $message"),
+    return ListTile(
+        leading: const Icon(Icons.double_arrow),
+        trailing: const Icon(
+            Icons.compare_arrows,
+            color: Colors.red,
+            size: 35,
         ),
-      ],
+        title:  Text(
+          message,
+          style: const TextStyle(fontSize: 25),
+        ),
     );
   }
 }
