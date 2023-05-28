@@ -17,16 +17,16 @@ class ItemInputHomeOne extends StatelessWidget {
             child: TextField(
                 controller: controller,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                  ),
                   labelText: "Votre item",
-                ))),
+                ),
+            ),
+        ),
         IconButton(
             onPressed: () {
               onPressed();
             },
-            icon: const Icon(Icons.add_circle, size: 45))
+            icon: const Icon(Icons.add_circle, size: 45),
+        ),
       ],
     );
   }

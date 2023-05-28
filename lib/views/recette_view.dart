@@ -12,7 +12,8 @@ class RecetteScreen extends StatefulWidget {
 
 class _RecetteScreenState extends State<RecetteScreen> {
   final TextEditingController _controller1 = TextEditingController();
-  String plat = '';
+  String plat = "";
+  String dish = "";
   late DatabaseReference dbRef;
 
   validerPlat(String username, String dish) {
@@ -22,8 +23,9 @@ class _RecetteScreenState extends State<RecetteScreen> {
         'dish' : dish
       };
       print(_dishes);
-      dbRef.push().set(_dishes);
-      plat = 'En cours de génération de recette';
+      // Save dish to flutter
+      // dbRef.push().set(_dishes);
+      plat = 'En cours de génération de recette pour $dish';
     });
   }
 
@@ -45,22 +47,28 @@ class _RecetteScreenState extends State<RecetteScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ItemInputHomeTwo(
-            controller: _controller1,
-            onPressed: () {
-              setState(() {
-                final message = _controller1.text;
-              });
-              _controller1.clear();
-            }),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              style: const ButtonStyle(
-                backgroundColor:
-                MaterialStatePropertyAll<Color>(Colors.black),
-              ),
-              onPressed: validerPlat("User3", "Omelette"),
-              child: const Text('Valider', ),
+              controller: _controller1,
+
+              onPressed: () {
+                setState(() {
+                  dish = _controller1.text;
+                  validerPlat("User4", _controller1.text);
+                    });
+                _controller1.clear();
+              }
             ),
+            // const SizedBox(height: 16.0),
+            // ElevatedButton(
+            //   style: const ButtonStyle(
+            //     backgroundColor:
+            //     MaterialStatePropertyAll<Color>(Colors.black),
+            //   ),
+            //   onPressed: validerPlat("User3", dish),
+            //   child: const Text(
+            //       'Valider',
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            // ),
             const SizedBox(height: 16.0),
             Text(
               'Plat renseigné : $plat',

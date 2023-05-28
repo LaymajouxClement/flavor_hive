@@ -11,14 +11,30 @@ class ItemInputHomeTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        Expanded(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
             child: TextField(
-              decoration: InputDecoration(
+              controller: controller,
+              decoration: const InputDecoration(
                 labelText: 'Plat',
               ),
             ),
+        ),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          style: const ButtonStyle(
+            backgroundColor:
+            MaterialStatePropertyAll<Color>(Colors.black),
+          ),
+          onPressed: () {
+            onPressed();
+          },
+          child: const Text(
+            'Valider',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );
