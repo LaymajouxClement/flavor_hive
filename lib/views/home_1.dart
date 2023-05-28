@@ -1,6 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import '../widgets/item_input.dart';
+import '../widgets/item_input_home_1.dart';
 import '../widgets/item_tile.dart';
 import '../widgets/sub_header.dart';
 
@@ -38,7 +38,7 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
             const SizedBox(
               height: 16,
             ),
-            ItemInput(
+            ItemInputHomeOne(
                 controller: _controller1,
                 onPressed: () {
                   setState(() {

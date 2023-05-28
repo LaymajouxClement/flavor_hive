@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ItemInput extends StatelessWidget {
-  const ItemInput(
+class ItemInputHomeOne extends StatelessWidget {
+  const ItemInputHomeOne(
       {Key? key,
         required this.controller,
         required this.onPressed})

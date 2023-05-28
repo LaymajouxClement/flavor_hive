@@ -1,18 +1,19 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flavor_hive/widgets/item_input.dart';
+import 'package:flavor_hive/components/BottomNavBarNavigation.dart';
+import 'package:flavor_hive/widgets/item_input_home_1.dart';
 import 'package:flavor_hive/widgets/item_tile.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/sub_header.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class PagesManager extends StatefulWidget {
+  const PagesManager({Key? key}) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<PagesManager> createState() => _PagesManagerState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _PagesManagerState extends State<PagesManager> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -34,6 +35,14 @@ class _ChatPageState extends State<ChatPage> {
       Icons.chat,
       size: 150,
     ),
+    Icon(
+      Icons.chat,
+      size: 150,
+    ),
+    Icon(
+      Icons.chat,
+      size: 150,
+    ),
   ];
 
   @override
@@ -43,22 +52,30 @@ class _ChatPageState extends State<ChatPage> {
       // Ce'st lui qui porte le widget tree (DOM)
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text("FlavorHive", style: TextStyle(color: Colors.black)),
+        title: const Text("FlavorHive", style: TextStyle(color: Colors.black), textAlign: TextAlign.center,),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         selectedFontSize: 20,
-        selectedIconTheme: IconThemeData(color: Colors.deepPurple),
-        selectedItemColor: Colors.deepPurple,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        selectedIconTheme: const IconThemeData(color: Colors.black),
+        selectedItemColor: Colors.amber[800],
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Acceuil',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.dining),
+            label: 'Recette',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.adb),
             label: 'ChatBot',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
@@ -69,7 +86,7 @@ class _ChatPageState extends State<ChatPage> {
         onTap: _onItemTapped,
       ),
       body: Container(
-        child: _pages.elementAt(_selectedIndex), //New
+        child: BottomNavBarNavigation(selectedIndex: _selectedIndex), //New
       ),
     );
   }
