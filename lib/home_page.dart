@@ -13,16 +13,28 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _controller1 = TextEditingController();
-  final List<String> _items = [];
+  int _selectedIndex = 0;
 
-  late DatabaseReference dbRef;
-
-  @override
-  void initState() {
-    super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child('Recipes');
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
+
+  static const List<Widget> _pages = <Widget>[
+    Icon(
+      Icons.call,
+      size: 150,
+    ),
+    Icon(
+      Icons.camera,
+      size: 150,
+    ),
+    Icon(
+      Icons.chat,
+      size: 150,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,87 +45,31 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.white,
         title: const Text("FlavorHive", style: TextStyle(color: Colors.black)),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
+        selectedFontSize: 20,
+        selectedIconTheme: IconThemeData(color: Colors.deepPurple),
+        selectedItemColor: Colors.deepPurple,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Acceuil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.adb),
+            label: 'ChatBot',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'Historique',
+          )
+        ],
+        currentIndex: _selectedIndex, //New
+        onTap: _onItemTapped,
+      ),
       body: Container(
-        child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    // color: Colors.deepPurple,
-                    height: 50.0,
-                    child: const SubHeaderTitle(),
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                ItemInput(
-                    controller: _controller1,
-                    onPressed: () {
-                      setState(() {
-                        final message = _controller1.text;
-                        _items.add(message);
-                      });
-                      _controller1.clear();
-                    }),
-                const SizedBox(
-                  height: 16,
-                ),
-                Expanded(
-                  child: Container(
-                    // color: Colors.amber,
-                    padding: const EdgeInsets.all(20),
-                    width: 300.0,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Color(0xFFDFDFDF)),
-                        left: BorderSide(color: Color(0xFFDFDFDF)),
-                        right: BorderSide(color: Color(0xFF7F7F7F)),
-                        bottom: BorderSide(color: Color(0xFF7F7F7F)),
-                      ),
-                      // color: Color(0xFFBFBFBF),
-                    ),
-                    child: ListView.builder(
-                        padding: const EdgeInsets.all(8),
-                        itemCount: _items.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ItemTile(message: _items[index]);
-                        }),
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Center(
-                  child: Container(
-                    width: 150,
-                    color: Colors.black,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                            MaterialStatePropertyAll<Color>(Colors.black),
-                          ),
-                          onPressed: () {
-                            Map<String, Object> recipes = {
-                              'username': "User2",
-                              'recipes' : _items
-                            };
-                            print(recipes);
-                            dbRef.push().set(recipes);
-                          },
-                          child: const Text('Go'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )),
+        child: _pages.elementAt(_selectedIndex), //New
       ),
     );
   }
