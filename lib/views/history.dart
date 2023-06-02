@@ -11,8 +11,8 @@ class HistoryPage extends StatefulWidget{
 class _HistoryPage extends State<HistoryPage>{
   @override
   Widget build(BuildContext context) {
-    final historyRecipesLoader = HistoryRecipesLoader();
-    final historyDishesLoader = HistoryDishesLoader();
+    const historyRecipesLoader = HistoryRecipesLoader();
+    const historyDishesLoader = HistoryDishesLoader();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -37,7 +37,7 @@ class _HistoryPage extends State<HistoryPage>{
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             historyRecipesLoader,
             historyDishesLoader

@@ -38,8 +38,9 @@ class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
               DocumentSnapshot documentSnapshot = snapshot.data.docs[index];
               List<String> data = documentSnapshot['recipes'].cast<String>();
               return ListTile(
-                title: Text(documentSnapshot['username'].toString()),
-                subtitle: Text(data.join(', ')),
+                leading: const Icon(Icons.grass),
+                title: Text('${data.join(', ')} (${documentSnapshot['username'].toString()})'),
+                subtitle: Text(documentSnapshot['bot_response'].toString()),
                 onTap: () {
                 },
                 trailing: IconButton(
@@ -47,7 +48,6 @@ class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
                     Icons.delete_outline,
                   ),
                   onPressed: () {
-                    // Here We Will Add The Delete Feature
                     db.collection('dishes_generator').doc(documentSnapshot.id).delete();
                   },
                 ),

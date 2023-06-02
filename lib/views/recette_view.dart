@@ -6,11 +6,10 @@ import 'package:flavor_hive/models/dishes.dart';
 import 'package:flavor_hive/widgets/item_input_home_2.dart';
 import 'package:flutter/material.dart';
 
-import '../components/open_ai.dart';
+import '../components/open_ai_helper.dart';
 import '../models/openai_model.dart';
 
 final db = FirebaseFirestore.instance;
-var url = Uri.parse('https://api.openai.com/v1/completions');
 
 class RecetteScreen extends StatefulWidget {
   const RecetteScreen({super.key});
@@ -21,18 +20,18 @@ class RecetteScreen extends StatefulWidget {
 
 class _RecetteScreenState extends State<RecetteScreen> {
   final TextEditingController _controller1 = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String plat = "";
   String dish = "";
 
   validerPlat(String username, String dish, String choice) {
     setState(() {
-      Map<String, String> _dishes = {
+      Map<String, String> dishes = {
         'username': username,
-        'dish' : dish
+        'dish' : dish,
+        'process' : choice
       };
-      print(_dishes);
-      // Save dish to flutter
+      print(dishes);
+      // Save dish to firestore
       // db.collection("recipes_generator").add(_dishes);
       plat = choice;
     });
@@ -50,7 +49,6 @@ class _RecetteScreenState extends State<RecetteScreen> {
         backgroundColor: Colors.black,
       ),
       body: Padding(
-        key: _formKey,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,20 +56,19 @@ class _RecetteScreenState extends State<RecetteScreen> {
             ItemInputHomeTwo(
               controller: _controller1,
               onPressed: () async {
-
                 Map<String, String> headers = {
                   'Content-Type': 'application/json;charset=UTF-8',
                   'Charset': 'utf-8',
                   'Authorization': 'Bearer $apiKey'
                 };
 
-                String promptData = "Je veux faire ${_controller1.text} en 2 lignes";
+                String promptData = "Je veux faire ${_controller1.text} en 3 lignes";
 
                 final data = jsonEncode({
                   "model": "text-davinci-003",
                   "prompt": promptData,
                   "temperature": 0.4,
-                  "max_tokens": 100,
+                  "max_tokens": 110,
                   "top_p": 1,
                   "frequency_penalty": 0,
                   "presence_penalty": 0
@@ -82,14 +79,14 @@ class _RecetteScreenState extends State<RecetteScreen> {
                       await http.post(url, headers: headers, body: data);
                   if (response.statusCode == 200) {
                     // print(response.body);
-                    final gptData = gptDataFromJson(response.body);
+                    final gptData = gptDataFromJson(toUtf8(response));
                     setState(() {
                       dish = _controller1.text;
                       validerPlat("User4", _controller1.text, gptData.choices[0].text);
                     });
                   }
                 }
-                _controller1.clear();
+                // _controller1.clear();
               }
             ),
             const SizedBox(height: 16.0),
