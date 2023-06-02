@@ -35,4 +35,4 @@ https://console.firebase.google.com/u/0/project/flavorhive-2023/settings/general
 
 **Etape 4 :**
 
-Ajouter une clé API Open AI dans le fichier `lib/components/open_ai.dart`
+Ajouter une clé API Open AI dans le fichier `lib/components/open_ai_helper.dart`
