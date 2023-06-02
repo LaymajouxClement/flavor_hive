@@ -1,8 +1,10 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../widgets/item_input_home_1.dart';
 import '../widgets/item_tile.dart';
 import '../widgets/sub_header.dart';
+
+final db = FirebaseFirestore.instance;
 
 class HomeScreenFirst extends StatefulWidget {
   const HomeScreenFirst({super.key});
@@ -13,12 +15,10 @@ class HomeScreenFirst extends StatefulWidget {
 class _HomeScreenFirstState extends State<HomeScreenFirst>{
   final TextEditingController _controller1 = TextEditingController();
   final List<String> _items = [];
-  late DatabaseReference dbRef;
 
   @override
   void initState() {
     super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child('Recipes');
   }
   @override
   Widget build(BuildContext context) {
@@ -94,8 +94,8 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
                           'username': "User2",
                           'recipes' : _items
                         };
-                        print(recipes);
-                        // dbRef.push().set(recipes);
+                        // write into db collection
+                        db.collection("dishes_generator").add(recipes);
                       },
                       child: const Text('Go'),
                     ),

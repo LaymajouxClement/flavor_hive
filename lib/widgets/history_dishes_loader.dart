@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 
 import 'item_tile.dart';
 
-class HistoryRecipesLoader extends StatefulWidget {
-  const HistoryRecipesLoader({Key? key}) : super(key: key);
+class HistoryDishesLoader extends StatefulWidget {
+  const HistoryDishesLoader({Key? key}) : super(key: key);
 
   @override
-  State<HistoryRecipesLoader> createState() => _HistoryRecipesLoaderState();
+  State<HistoryDishesLoader> createState() => _HistoryDishesLoaderState();
 }
 
-class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
+class _HistoryDishesLoaderState extends State<HistoryDishesLoader> {
   late FirebaseFirestore db;
 
   @override
@@ -25,7 +25,7 @@ class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
-        stream: db.collection('dishes_generator').snapshots(),
+        stream: db.collection('recipes_generator').snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -36,10 +36,9 @@ class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
             itemCount: snapshot.data?.docs.length,
             itemBuilder: (context, int index) {
               DocumentSnapshot documentSnapshot = snapshot.data.docs[index];
-              List<String> data = documentSnapshot['recipes'].cast<String>();
               return ListTile(
                 title: Text(documentSnapshot['username'].toString()),
-                subtitle: Text(data.join(', ')),
+                subtitle: Text(documentSnapshot['dish'].toString()),
                 onTap: () {
                 },
                 trailing: IconButton(
@@ -48,7 +47,7 @@ class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
                   ),
                   onPressed: () {
                     // Here We Will Add The Delete Feature
-                    db.collection('dishes_generator').doc(documentSnapshot.id).delete();
+                    db.collection('recipes_generator').doc(documentSnapshot.id).delete();
                   },
                 ),
               );
@@ -57,6 +56,6 @@ class _HistoryRecipesLoaderState extends State<HistoryRecipesLoader> {
         },
       ),
     );
-      // fetchData();
+    // fetchData();
   }
 }

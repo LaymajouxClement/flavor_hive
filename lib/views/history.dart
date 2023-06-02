@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/history_dishes_loader.dart';
 import '../widgets/history_recipes_loader.dart';
 
 class HistoryPage extends StatefulWidget{
@@ -11,11 +12,15 @@ class _HistoryPage extends State<HistoryPage>{
   @override
   Widget build(BuildContext context) {
     final historyRecipesLoader = HistoryRecipesLoader();
+    final historyDishesLoader = HistoryDishesLoader();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
+          shadowColor: Colors.amber[800],
+          surfaceTintColor: Colors.amber[800],
+          foregroundColor: Colors.amber[800],
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: const [
@@ -35,7 +40,7 @@ class _HistoryPage extends State<HistoryPage>{
         body: TabBarView(
           children: [
             historyRecipesLoader,
-            const Text("PLats")
+            historyDishesLoader
           ],
         ),
       ),

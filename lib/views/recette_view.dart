@@ -1,7 +1,16 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flavor_hive/models/dishes.dart';
 import 'package:flavor_hive/widgets/item_input_home_2.dart';
 import 'package:flutter/material.dart';
+
+import '../components/open_ai.dart';
+import '../models/openai_model.dart';
+
+final db = FirebaseFirestore.instance;
+var url = Uri.parse('https://api.openai.com/v1/completions');
 
 class RecetteScreen extends StatefulWidget {
   const RecetteScreen({super.key});
@@ -12,11 +21,11 @@ class RecetteScreen extends StatefulWidget {
 
 class _RecetteScreenState extends State<RecetteScreen> {
   final TextEditingController _controller1 = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String plat = "";
   String dish = "";
-  late DatabaseReference dbRef;
 
-  validerPlat(String username, String dish) {
+  validerPlat(String username, String dish, String choice) {
     setState(() {
       Map<String, String> _dishes = {
         'username': username,
@@ -24,15 +33,14 @@ class _RecetteScreenState extends State<RecetteScreen> {
       };
       print(_dishes);
       // Save dish to flutter
-      // dbRef.push().set(_dishes);
-      plat = 'En cours de génération de recette pour $dish';
+      // db.collection("recipes_generator").add(_dishes);
+      plat = choice;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child('Dishes');
   }
   @override
   Widget build(BuildContext context) {
@@ -42,36 +50,51 @@ class _RecetteScreenState extends State<RecetteScreen> {
         backgroundColor: Colors.black,
       ),
       body: Padding(
+        key: _formKey,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ItemInputHomeTwo(
               controller: _controller1,
+              onPressed: () async {
 
-              onPressed: () {
-                setState(() {
-                  dish = _controller1.text;
-                  validerPlat("User4", _controller1.text);
+                Map<String, String> headers = {
+                  'Content-Type': 'application/json;charset=UTF-8',
+                  'Charset': 'utf-8',
+                  'Authorization': 'Bearer $apiKey'
+                };
+
+                String promptData = "Je veux faire ${_controller1.text} en 2 lignes";
+
+                final data = jsonEncode({
+                  "model": "text-davinci-003",
+                  "prompt": promptData,
+                  "temperature": 0.4,
+                  "max_tokens": 100,
+                  "top_p": 1,
+                  "frequency_penalty": 0,
+                  "presence_penalty": 0
+                });
+
+                if (promptData.isNotEmpty) {
+                  var response =
+                      await http.post(url, headers: headers, body: data);
+                  if (response.statusCode == 200) {
+                    // print(response.body);
+                    final gptData = gptDataFromJson(response.body);
+                    setState(() {
+                      dish = _controller1.text;
+                      validerPlat("User4", _controller1.text, gptData.choices[0].text);
                     });
+                  }
+                }
                 _controller1.clear();
               }
             ),
-            // const SizedBox(height: 16.0),
-            // ElevatedButton(
-            //   style: const ButtonStyle(
-            //     backgroundColor:
-            //     MaterialStatePropertyAll<Color>(Colors.black),
-            //   ),
-            //   onPressed: validerPlat("User3", dish),
-            //   child: const Text(
-            //       'Valider',
-            //     style: TextStyle(color: Colors.white),
-            //   ),
-            // ),
             const SizedBox(height: 16.0),
             Text(
-              'Plat renseigné : $plat',
+              plat,
               style: const TextStyle(fontSize: 18.0),
             ),
           ],
