@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blurry/blurry.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import '../widgets/sub_header.dart';
 
 final db = FirebaseFirestore.instance;
 bool _isVisible = false;
+
 class HomeScreenFirst extends StatefulWidget {
   const HomeScreenFirst({super.key});
 
@@ -19,24 +21,25 @@ class HomeScreenFirst extends StatefulWidget {
   State<HomeScreenFirst> createState() => _HomeScreenFirstState();
 }
 
-class _HomeScreenFirstState extends State<HomeScreenFirst>{
+class _HomeScreenFirstState extends State<HomeScreenFirst> {
   final TextEditingController _controller1 = TextEditingController();
   final List<String> _items = [];
 
-  validerIngredients(String user, List<String> ingredients, String choice){
+  validerIngredients(String user, List<String> ingredients, String choice) {
     Map<String, Object> recipes = {
-          'username': "User2",
-          'recipes' : _items,
-          'bot_response' : choice
-        };
+      'username': "User2",
+      'recipes': _items,
+      'bot_response': choice
+    };
     // write into db collection
-    //   db.collection("dishes_generator").add(recipes);
+      db.collection("dishes_generator").add(recipes);
   }
 
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -56,18 +59,17 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
               height: 16,
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ItemInputHomeOne(
-                  controller: _controller1,
-                  onPressed: () {
-                    setState(() {
-                      final message = _controller1.text;
-                      _items.add(message);
-                      _isVisible = true;
-                    });
-                    _controller1.clear();
-                  })
-            ),
+                padding: const EdgeInsets.all(20.0),
+                child: ItemInputHomeOne(
+                    controller: _controller1,
+                    onPressed: () {
+                      setState(() {
+                        final message = _controller1.text;
+                        _items.add(message);
+                        _isVisible = true;
+                      });
+                      _controller1.clear();
+                    })),
             const SizedBox(
               height: 16,
             ),
@@ -76,20 +78,20 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
                 // color: Colors.amber,
                 padding: const EdgeInsets.all(10),
                 width: Size.infinite.height,
-                decoration: const BoxDecoration(
-                ),
+                decoration: const BoxDecoration(),
                 child: ListView.builder(
-                    itemCount: _items.length,
-                    itemBuilder: (context, index) {
-                      return Dismissible(
-                        key: Key(_items[index]),
-                        onDismissed: (direction) {
-                          setState(() {
-                            _items.removeAt(index);
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_items[index]} deleted')));
-                        },
-                        child: ItemTile(message: _items[index]),
+                  itemCount: _items.length,
+                  itemBuilder: (context, index) {
+                    return Dismissible(
+                      key: Key(_items[index]),
+                      onDismissed: (direction) {
+                        setState(() {
+                          _items.removeAt(index);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('${_items[index]} deleted')));
+                      },
+                      child: ItemTile(message: _items[index]),
                     );
                   },
                 ),
@@ -110,7 +112,7 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
                       ElevatedButton(
                         style: const ButtonStyle(
                           backgroundColor:
-                          MaterialStatePropertyAll<Color>(Colors.black),
+                              MaterialStatePropertyAll<Color>(Colors.black),
                         ),
                         onPressed: () async {
                           Map<String, String> headers = {
@@ -119,7 +121,8 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
                             'Authorization': 'Bearer $apiKey'
                           };
 
-                          String promptData = "Donnes moi les noms de 3 propositions de repas à base de ${_items.join(', ')}, ne pas détailler";
+                          String promptData =
+                              "Donnes moi les noms de 3 propositions de repas à base de ${_items.join(', ')}, ne pas détailler";
 
                           final data = jsonEncode({
                             "model": "text-davinci-003",
@@ -131,15 +134,38 @@ class _HomeScreenFirstState extends State<HomeScreenFirst>{
                             "presence_penalty": 0
                           });
 
-                          print(promptData);
                           if (promptData.isNotEmpty) {
-                            var response =
-                            await http.post(url, headers: headers, body: data);
+                            var response = await http.post(url,
+                                headers: headers, body: data);
                             if (response.statusCode == 200) {
                               final gptData = gptDataFromJson(toUtf8(response));
-                              print(gptData.choices[0].text);
+
                               setState(() {
-                                validerIngredients("User3", _items, gptData.choices[0].text);
+                                validerIngredients(
+                                    "User3", _items, gptData.choices[0].text);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Liste des suggestions de menus'),
+                                      content: Column(
+                                        children: [
+                                          for (var item
+                                              in gptData.choices.take(3))
+                                            Text(item.text),
+                                        ],
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Fermer'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               });
                             }
                           }

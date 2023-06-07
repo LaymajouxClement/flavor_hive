@@ -30,9 +30,8 @@ class _RecetteScreenState extends State<RecetteScreen> {
         'dish' : dish,
         'process' : choice
       };
-      print(dishes);
       // Save dish to firestore
-      // db.collection("recipes_generator").add(_dishes);
+      db.collection("recipes_generator").add(dishes);
       plat = choice;
     });
   }
@@ -78,7 +77,6 @@ class _RecetteScreenState extends State<RecetteScreen> {
                   var response =
                       await http.post(url, headers: headers, body: data);
                   if (response.statusCode == 200) {
-                    // print(response.body);
                     final gptData = gptDataFromJson(toUtf8(response));
                     setState(() {
                       dish = _controller1.text;
@@ -86,7 +84,6 @@ class _RecetteScreenState extends State<RecetteScreen> {
                     });
                   }
                 }
-                // _controller1.clear();
               }
             ),
             const SizedBox(height: 16.0),

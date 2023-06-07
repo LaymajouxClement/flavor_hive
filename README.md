@@ -11,27 +11,19 @@ Ce projet peut être récupéré et lancer depuis votre local mais il contient d
 
 **Etape 1 :**
 
-Télécharger ou cloner ce repertoire en utilisant ce lien
-
-```
-https://github.com/LaymajouxClement/flavor_hive.git
-```
+Télécharger ou cloner ce repertoire en utilisant ce lien [ici](https://github.com/LaymajouxClement/flavor_hive.git)
 
 **Etape 2 :**
 
 Aller à la racine du projet et exécuter la commande suivante pour récupérer les dépendances requises
 
-```
+```bash
 flutter pub get 
 ```
 
 **Etape 3 :**
 
-Recupérer le fichier de credentials Google `google-services.json` et le mettre dans `android/app/google-services.json` (si vous n'étes pas autorisé, n'hésitez pas à nous contacter)
-
-```
-https://console.firebase.google.com/u/0/project/flavorhive-2023/settings/general/android:com.example.flavor_hive?consoleUI=FIREBASE
-```
+Recupérer le fichier de [credentials Google](https://console.firebase.google.com/u/0/project/flavorhive-2023/settings/general/android:com.example.flavor_hive?consoleUI=FIREBASE) `google-services.json` et le mettre dans `android/app/google-services.json` (si vous n'étes pas autorisé, n'hésitez pas à nous contacter)
 
 **Etape 4 :**
 
