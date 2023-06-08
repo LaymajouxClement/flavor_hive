@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flavor_hive/components/BottomNavBarNavigation.dart';
+import 'package:flavor_hive/widgets/BottomNavBarNavigation.dart';
 import 'package:flavor_hive/widgets/item_input_home_1.dart';
 import 'package:flavor_hive/widgets/item_tile.dart';
 import 'package:flutter/material.dart';

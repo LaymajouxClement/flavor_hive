@@ -6,7 +6,7 @@ import 'package:flavor_hive/models/dishes.dart';
 import 'package:flavor_hive/widgets/item_input_home_2.dart';
 import 'package:flutter/material.dart';
 
-import '../components/open_ai_helper.dart';
+import '../widgets/open_ai_helper.dart';
 import '../models/openai_model.dart';
 
 final db = FirebaseFirestore.instance;

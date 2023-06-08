@@ -1,11 +1,10 @@
 import 'dart:convert';
 
-import 'package:blurry/blurry.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../components/BottomNavBarNavigation.dart';
-import '../components/open_ai_helper.dart';
+import '../widgets/BottomNavBarNavigation.dart';
+import '../widgets/open_ai_helper.dart';
 import '../models/openai_model.dart';
 import '../widgets/item_input_home_1.dart';
 import '../widgets/item_tile.dart';
