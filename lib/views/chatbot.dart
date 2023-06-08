@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../widgets/open_ai_helper.dart';
@@ -23,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
     Map<String, String> headers = {
       'Content-Type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8',
-      'Authorization': 'Bearer $apiKey'
+      'Authorization': 'Bearer ${dotenv.get('OPEN_AI_KEY', fallback: 'OPEN_AI_KEY not found')}'
     };
 
     // Set the request body

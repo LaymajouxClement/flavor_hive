@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flavor_hive/models/dishes.dart';
@@ -58,7 +59,7 @@ class _RecetteScreenState extends State<RecetteScreen> {
                 Map<String, String> headers = {
                   'Content-Type': 'application/json;charset=UTF-8',
                   'Charset': 'utf-8',
-                  'Authorization': 'Bearer $apiKey'
+                  'Authorization': 'Bearer ${dotenv.get('OPEN_AI_KEY', fallback: 'OPEN_AI_KEY not found')}'
                 };
 
                 String promptData = "Je veux faire ${_controller1.text} en 3 lignes";
@@ -87,9 +88,11 @@ class _RecetteScreenState extends State<RecetteScreen> {
               }
             ),
             const SizedBox(height: 16.0),
-            Text(
-              plat,
-              style: const TextStyle(fontSize: 18.0),
+            Expanded(
+                child: Text(
+                  plat,
+                  style: const TextStyle(fontSize: 18.0),
+                ),
             ),
           ],
         ),
