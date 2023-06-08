@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../views/home_1.dart';
 import '../views/recette_view.dart';
+import '../views/settings_view.dart';
 
 class BottomNavBarNavigation extends StatelessWidget {
   final int selectedIndex;
@@ -13,6 +14,8 @@ class BottomNavBarNavigation extends StatelessWidget {
         return const HomeScreenFirst();
       case 1:
         return const RecetteScreen();
+      case 3:
+        return const SettingsScreen();
       default:
         return const HomeScreenFirst();
     }
