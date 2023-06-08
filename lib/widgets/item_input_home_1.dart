@@ -15,10 +15,10 @@ class ItemInputHomeOne extends StatelessWidget {
       children: [
         Expanded(
             child: TextField(
-                controller: controller,
-                decoration: const InputDecoration(
-                  labelText: "Votre item",
-                ),
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: "Votre item",
+              ),
             ),
         ),
         IconButton(

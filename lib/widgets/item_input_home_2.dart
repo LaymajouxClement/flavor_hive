@@ -18,7 +18,7 @@ class ItemInputHomeTwo extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: const InputDecoration(
-                labelText: 'Plat',
+                labelText: 'Saisir le nom du plat à recetter',
               ),
             ),
         ),

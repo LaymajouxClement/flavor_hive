@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flavor_hive/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
