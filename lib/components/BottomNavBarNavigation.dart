@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../views/chatbot.dart';
 import '../views/history.dart';
 import '../views/home_1.dart';
 import '../views/recette_view.dart';
@@ -14,6 +15,8 @@ class BottomNavBarNavigation extends StatelessWidget {
         return const HomeScreenFirst();
       case 1:
         return const RecetteScreen();
+      case 2:
+        return ChatBotApp();
       case 3:
         return const HistoryPage();
       default:

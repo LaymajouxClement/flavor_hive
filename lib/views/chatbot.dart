@@ -1,119 +1,134 @@
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../widgets/item_input_home_1.dart';
 import '../widgets/item_tile.dart';
 import '../widgets/sub_header.dart';
+import 'package:http/http.dart' as http;
+
+import '../components/open_ai_helper.dart';
+import '../models/openai_model.dart';
+
+class ChatBotApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Chat Bot',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: ChatScreen(),
+    );
+  }
+}
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key});
-
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _controller1 = TextEditingController();
-  final List<String> _items = [];
-  late DatabaseReference dbRef;
+  late TextEditingController _messageController;
+  late List<String> _chatHistory;
+  late String _chatbotReply;
+  late bool _isWaiting;
+
+  final String _apiUrl = 'https://api.openai.com/v1/completions';
+  final String _apiKey = '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';
 
   @override
   void initState() {
     super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child('Recipes');
+    _messageController = TextEditingController();
+    _chatHistory = [];
+    _chatbotReply = '';
+    _isWaiting = false;
   }
 
-  void _addItem(String item) {
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  void _sendMessage() async {
+    final String message = _messageController.text;
+    _messageController.clear();
+
     setState(() {
-      _items.add(item);
+      _chatHistory.add('User: $message');
+      _isWaiting = true;
     });
-  }
 
-  void _removeItem(int index) {
-    setState(() {
-      _items.removeAt(index);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_items[index]} deleted')));
-  }
+    final response = await http.post(
+      Uri.parse(_apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $_apiKey',
+      },
+      body: jsonEncode({
+        'prompt': 'You are a helpful assistant for cooking. User: $message',
+        'max_tokens': 50,
+      }),
+    );
 
-  void _submitItems() {
-    Map<String, Object> recipes = {
-      'username': "User2",
-      'recipes': _items
-    };
-    print(recipes);
-    // dbRef.push().set(recipes);
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      final chatbotReply = responseData['choices'][0]['text'];
+
+      setState(() {
+        _chatbotReply = chatbotReply;
+        _chatHistory.add('Chatbot: $_chatbotReply');
+        _isWaiting = false;
+      });
+    } else {
+      setState(() {
+        _chatbotReply = 'Error: Failed to communicate with the chatbot.';
+        _chatHistory.add(_chatbotReply);
+        _isWaiting = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            const Expanded(
-              child: SizedBox(
-                height: 50.0,
-                child: SubHeaderTitle(),
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            ItemInputHomeOne(
-              controller: _controller1,
-              onPressed: () {
-                final message = _controller1.text;
-                _addItem(message);
-                _controller1.clear();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cuisine Chatbot'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: _chatHistory.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_chatHistory[index]),
+                );
               },
             ),
-            const SizedBox(
-              height: 16,
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                width: double.infinity,
-                decoration: const BoxDecoration(),
-                child: ListView.builder(
-                  itemCount: _items.length,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: Key(_items[index]),
-                      onDismissed: (direction) {
-                        _removeItem(index);
-                      },
-                      child: ItemTile(message: _items[index]),
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Center(
-              child: Container(
-                width: 150,
-                color: Colors.black,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor:
-                        MaterialStatePropertyAll<Color>(Colors.black),
-                      ),
-                      onPressed: _submitItems,
-                      child: const Text('Go'),
+          ),
+          if (_isWaiting) Text('Waiting for the chatbot...'),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Type your message...',
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _sendMessage,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          if (_chatbotReply.isNotEmpty) Text('Chatbot: $_chatbotReply'),
+        ],
       ),
     );
   }
