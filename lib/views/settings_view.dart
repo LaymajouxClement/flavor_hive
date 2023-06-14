@@ -47,9 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _changeTheme(ThemeData themeData) {
     final MaterialApp app = MaterialApp(
       theme: themeData,
-      home: const Scaffold(
-        body: PagesManager(), // Replace with the home screen widget of your app
-      ),
+      home: PagesManager()
     );
 
     // Update the app's theme

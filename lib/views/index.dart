@@ -6,6 +6,8 @@ class IndexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double carouselHeight = screenHeight * 0.8;
     return Scaffold(
       appBar: AppBar(
         title: Text('App Menu'),
@@ -17,6 +19,7 @@ class IndexScreen extends StatelessWidget {
             Center(
               child: CarouselSlider(
                 options: CarouselOptions(
+                  height: carouselHeight,
                   aspectRatio: 16 / 9,
                   autoPlay: true,
                   enlargeCenterPage: true,
@@ -52,56 +55,5 @@ class HomePage extends StatelessWidget {
         child: Text('Welcome to the Home Screen!'),
       ),
     );
-  }
-}
-
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
-
-  @override
-  _SettingsScreenState createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isDarkModeEnabled = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: Text('Dark Mode'),
-            trailing: Switch(
-              value: _isDarkModeEnabled,
-              onChanged: (value) {
-                setState(() {
-                  _isDarkModeEnabled = value;
-                  _updateTheme(value);
-                });
-              },
-            ),
-          ),
-          // Add more settings options here
-        ],
-      ),
-    );
-  }
-
-  void _updateTheme(bool isDarkMode) {
-    ThemeData themeData = isDarkMode ? ThemeData.dark() : ThemeData.light();
-    _changeTheme(themeData);
-  }
-
-  void _changeTheme(ThemeData themeData) {
-    final MaterialApp app = MaterialApp(
-      theme: themeData,
-      home: const IndexScreen(),
-    );
-
-    runApp(app);
   }
 }
