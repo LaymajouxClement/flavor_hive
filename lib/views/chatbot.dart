@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-import '../widgets/open_ai_helper.dart';
+import '../widgets/openai_helper.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -18,8 +18,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<Map<String, dynamic>> _messages = [];
 
   Future<String> sendMessage(String message) async {
-    String apiUrl = 'https://api.openai.com/v1/chat/completions';
-    print(message);
+    String apiUrl = 'https://api.openai.com/v1/completions';
+    print("Message : $message");
     // Set the request headers
     Map<String, String> headers = {
       'Content-Type': 'application/json;charset=UTF-8',
@@ -27,32 +27,33 @@ class _ChatScreenState extends State<ChatScreen> {
       'Authorization': 'Bearer ${dotenv.get('OPEN_AI_KEY', fallback: 'OPEN_AI_KEY not found')}'
     };
 
+    // String promptData = message;
+    String promptData = "Tu es un chef cuisinier enseignant lors d'une formation avec un apprenant, l'apprenant te dit $message, reponds lui avec des réponses courtes";
     // Set the request body
-    Map<String, dynamic> requestBody = {
-      'prompt': message,
-      'max_tokens': 150,
-    };
     final data = jsonEncode({
       "model": "text-davinci-003",
-      "prompt": message,
+      "prompt": promptData,
       "temperature": 0.4,
-      "max_tokens": 110,
+      "max_tokens": 100,
       "top_p": 1,
       "frequency_penalty": 0,
-      "presence_penalty": 0
+      "presence_penalty": 0.6,
+      "stop": [" chef cuisinier:", "apprenant:"]
     });
-    print(data);
+
+    print("Data to send : $data");
     // Send the HTTP POST request
     var response = await http.post(Uri.parse(apiUrl), headers: headers, body: data);
 
     // Check the response status code
     if (response.statusCode == 200) {
       // Parse the response body
-      var responseData = jsonDecode(response.body);
-      print(responseData);
+      final gptData = gptDataFromJson(toUtf8(response));
+      print("Raw reponse : $response");
 
       // Extract the generated completion text from the response
-      String completionText = responseData['choices'][0]['text'];
+      String completionText = gptData.choices[0].text;
+      print("Reponse : $completionText");
 
       return completionText;
     } else {
@@ -63,14 +64,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage() {
     if (_textController.text.isNotEmpty) {
-      String message = _textController.text;
 
       setState(() {
-        _messages.add({'text': message, 'isUser': true});
+        _messages.add({'text': _textController.text, 'isUser': true});
         _textController.clear();
       });
 
-      sendMessage(message).then((response) {
+      sendMessage(_textController.text).then((response) {
         setState(() {
           _messages.add({'text': response, 'isUser': false});
         });

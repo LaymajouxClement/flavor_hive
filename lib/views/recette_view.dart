@@ -2,15 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flavor_hive/models/dishes.dart';
 import 'package:flavor_hive/widgets/item_input_home_2.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/open_ai_helper.dart';
-import '../models/openai_model.dart';
-
-final db = FirebaseFirestore.instance;
+import '../widgets/openai_helper.dart';
 
 class RecetteScreen extends StatefulWidget {
   const RecetteScreen({super.key});
@@ -23,19 +19,6 @@ class _RecetteScreenState extends State<RecetteScreen> {
   final TextEditingController _controller1 = TextEditingController();
   String plat = "";
   String dish = "";
-
-  validerPlat(String username, String dish, String choice) {
-    setState(() {
-      Map<String, String> dishes = {
-        'username': username,
-        'dish' : dish,
-        'process' : choice
-      };
-      // Save dish to firestore
-      db.collection("recipes_generator").add(dishes);
-      plat = choice;
-    });
-  }
 
   @override
   void initState() {
@@ -73,7 +56,6 @@ class _RecetteScreenState extends State<RecetteScreen> {
                   "frequency_penalty": 0,
                   "presence_penalty": 0
                 });
-
                 if (promptData.isNotEmpty) {
                   var response =
                       await http.post(url, headers: headers, body: data);
@@ -81,7 +63,8 @@ class _RecetteScreenState extends State<RecetteScreen> {
                     final gptData = gptDataFromJson(toUtf8(response));
                     setState(() {
                       dish = _controller1.text;
-                      validerPlat("User4", _controller1.text, gptData.choices[0].text);
+                      final Dishes dishes = Dishes(username: "UserTest", dishName:  _controller1.text, process: gptData.choices[0].text);
+                      plat = dishes.save(dishes);
                     });
                   }
                 }

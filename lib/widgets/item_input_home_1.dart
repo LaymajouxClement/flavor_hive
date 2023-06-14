@@ -17,7 +17,7 @@ class ItemInputHomeOne extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: const InputDecoration(
-                labelText: "Votre item",
+                labelText: "Ajouter un élément à la recette",
               ),
             ),
         ),

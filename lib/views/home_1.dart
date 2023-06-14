@@ -1,17 +1,14 @@
 import 'dart:convert';
 
+import 'package:flavor_hive/models/recipes.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../widgets/BottomNavBarNavigation.dart';
-import '../widgets/open_ai_helper.dart';
-import '../models/openai_model.dart';
+import '../widgets/openai_helper.dart';
 import '../widgets/item_input_home_1.dart';
 import '../widgets/item_tile.dart';
 import '../widgets/sub_header.dart';
 
-final db = FirebaseFirestore.instance;
 bool _isVisible = false;
 
 class HomeScreenFirst extends StatefulWidget {
@@ -24,16 +21,6 @@ class HomeScreenFirst extends StatefulWidget {
 class _HomeScreenFirstState extends State<HomeScreenFirst> {
   final TextEditingController _controller1 = TextEditingController();
   final List<String> _items = [];
-
-  validerIngredients(String user, List<String> ingredients, String choice) {
-    Map<String, Object> recipes = {
-      'username': "User2",
-      'recipes': _items,
-      'bot_response': choice
-    };
-    // write into db collection
-      db.collection("dishes_generator").add(recipes);
-  }
 
   @override
   void initState() {
@@ -118,7 +105,8 @@ class _HomeScreenFirstState extends State<HomeScreenFirst> {
                           Map<String, String> headers = {
                             'Content-Type': 'application/json;charset=UTF-8',
                             'Charset': 'utf-8',
-                            'Authorization': 'Bearer ${dotenv.get('OPEN_AI_KEY', fallback: 'OPEN_AI_KEY not found')}'
+                            'Authorization':
+                                'Bearer ${dotenv.get('OPEN_AI_KEY', fallback: 'OPEN_AI_KEY not found')}'
                           };
 
                           String promptData =
@@ -141,13 +129,17 @@ class _HomeScreenFirstState extends State<HomeScreenFirst> {
                               final gptData = gptDataFromJson(toUtf8(response));
 
                               setState(() {
-                                validerIngredients(
-                                    "User3", _items, gptData.choices[0].text);
+                                final Recipes recipes = Recipes(
+                                    username: "UserTest",
+                                    itemsList: _items,
+                                    botResponse: gptData.choices[0].text);
+                                recipes.save(recipes);
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text('Liste des suggestions de menus'),
+                                      title: const Text(
+                                          'Liste des suggestions de menus'),
                                       content: Column(
                                         children: [
                                           for (var item
