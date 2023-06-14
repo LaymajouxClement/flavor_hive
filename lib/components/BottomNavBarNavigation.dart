@@ -17,6 +17,8 @@ class BottomNavBarNavigation extends StatelessWidget {
         return const RecetteScreen();
       case 3:
         return const HistoryPage();
+      case 4:
+        return const SettingsScreen();
       default:
         return const HomeScreenFirst();
     }
