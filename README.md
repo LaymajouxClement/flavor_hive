@@ -23,7 +23,7 @@ flutter pub get
 
 **Etape 3 :**
 
-Recupérer le fichier de [credentials Google](https://console.firebase.google.com/u/0/project/flavorhive-2023/settings/general/android:com.example.flavor_hive?consoleUI=FIREBASE) `google-services.json` et le mettre dans `android/app/google-services.json` (si vous n'étes pas autorisé, n'hésitez pas à nous contacter)
+Recupérer le fichier de [credentials Google](https://console.firebase.google.com/u/0/project/flavorhive-2023/settings/general/android:com.example.flavor_hive?consoleUI=FIREBASE) `google-services.json` et le mettre dans `android/app/google-services.json` (si vous n'étes pas autorisé.es, n'hésitez pas à nous contacter)
 
 **Etape 4 :**
 

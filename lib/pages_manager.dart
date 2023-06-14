@@ -44,6 +44,11 @@ class _PagesManagerState extends State<PagesManager> {
             backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book),
+            label: 'Menu',
+            backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.dining),
             label: 'Recette',
             backgroundColor: Colors.black,

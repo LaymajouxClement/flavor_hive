@@ -1,3 +1,4 @@
+import 'package:flavor_hive/widgets/settings_view.dart';
 import 'package:flutter/material.dart';
 import '../views/chatbot.dart';
 import '../views/history.dart';
@@ -14,11 +15,15 @@ class BottomNavBarNavigation extends StatelessWidget {
       case 0:
         return const HomeScreenFirst();
       case 1:
-        return const RecetteScreen();
+        return const HomeScreenFirst();
       case 2:
-        return const ChatScreen();
+        return const RecetteScreen();
       case 3:
+        return const ChatScreen();
+      case 4:
         return const HistoryPage();
+      case 5:
+        return const SettingsScreen();
       default:
         return const HomeScreenFirst();
     }
