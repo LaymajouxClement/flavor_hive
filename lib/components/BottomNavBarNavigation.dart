@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../views/history.dart';
 import '../views/home_1.dart';
 import '../views/recette_view.dart';
+import '../views/chatbot.dart';
 
 class BottomNavBarNavigation extends StatelessWidget {
   final int selectedIndex;
@@ -16,7 +17,7 @@ class BottomNavBarNavigation extends StatelessWidget {
       case 1:
         return const RecetteScreen();
       case 2:
-        return const HomeScreenFirst();
+        return ChatScreen();
       case 3:
         return const HistoryPage();
       case 4:

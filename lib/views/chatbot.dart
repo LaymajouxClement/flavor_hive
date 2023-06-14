@@ -1,14 +1,6 @@
 import 'dart:convert';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import '../widgets/item_input_home_1.dart';
-import '../widgets/item_tile.dart';
-import '../widgets/sub_header.dart';
 import 'package:http/http.dart' as http;
-
-import '../components/open_ai_helper.dart';
-import '../models/openai_model.dart';
 
 class ChatBotApp extends StatelessWidget {
   @override
@@ -32,8 +24,9 @@ class _ChatScreenState extends State<ChatScreen> {
   late String _chatbotReply;
   late bool _isWaiting;
 
-  final String _apiUrl = 'https://api.openai.com/v1/completions';
-  final String _apiKey = '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';
+  final String _apiUrl = 'https://api.openai.com/v1/models';
+  final String _apiKey = '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';
+  final String _model = 'text-davinci-003';
 
   @override
   void initState() {
@@ -66,24 +59,22 @@ class _ChatScreenState extends State<ChatScreen> {
         'Authorization': 'Bearer $_apiKey',
       },
       body: jsonEncode({
-        'model': "text-davinci-003",
+        'model': _model,
         'prompt': 'You are a helpful assistant for cooking. User: $message',
-        'temperature': 0.9,
-        'max_tokens': 150,
+        'max_tokens': 50,
+        'temperature': 0.7,
         'top_p': 1.0,
-        'frequency_penalty':0.0,
-        'presence_penalty':0.6,
+        'n': 1,
         'stop': '\n',
-
       }),
     );
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       final chatbotReply = responseData['choices'][0]['text'];
 
       setState(() {
-        _chatbotReply = chatbotReply;
+        _chatbotReply = chatbotReply.trim();
         _chatHistory.add('Chatbot: $_chatbotReply');
         _isWaiting = false;
       });
