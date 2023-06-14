@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../pages_manager.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -45,8 +47,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _changeTheme(ThemeData themeData) {
     final MaterialApp app = MaterialApp(
       theme: themeData,
-      home: Scaffold(
-        body: Container(), // Replace with the home screen widget of your app
+      home: const Scaffold(
+        body: PagesManager(), // Replace with the home screen widget of your app
       ),
     );
 
