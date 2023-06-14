@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../views/chatbot.dart';
 import '../views/history.dart';
 import '../views/home_1.dart';
+import '../views/index.dart';
 import '../views/recette_view.dart';
 
 class BottomNavBarNavigation extends StatelessWidget {
@@ -13,7 +14,7 @@ class BottomNavBarNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (selectedIndex) {
       case 0:
-        return const HomeScreenFirst();
+        return const IndexScreen();
       case 1:
         return const HomeScreenFirst();
       case 2:

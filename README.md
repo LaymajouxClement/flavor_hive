@@ -27,4 +27,12 @@ Recupérer le fichier de [credentials Google](https://console.firebase.google.co
 
 **Etape 4 :**
 
-Ajouter une clé API Open AI dans le fichier `lib/components/open_ai_helper.dart`
+Créer un fichier nommé `.env` à l'image du fichier `.env.example` quitte à la copier, puis renseigner une clé API Open AI valide
+
+**Etape 5 :**
+
+Lancer depuis votre IDE ou alors depuis votre terminal avec la commande
+
+```bash
+flutter run
+```

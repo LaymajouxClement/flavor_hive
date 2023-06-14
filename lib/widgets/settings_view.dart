@@ -22,7 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           ListTile(
-            title: Text('Dark Mode'),
+            title: const Text('Dark Mode'),
             trailing: Switch(
               value: _isDarkModeEnabled,
               onChanged: (value) {
@@ -49,11 +49,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final MaterialApp app = MaterialApp(
       theme: themeData,
       home: const Scaffold(
-        body: PagesManager(), // Replace with the home screen widget of your app
+        body: PagesManager(),
       ),
     );
-
-    // Update the app's theme
     runApp(app);
   }
 }
