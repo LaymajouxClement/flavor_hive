@@ -97,17 +97,39 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ListView.builder(
+              reverse: true,
               itemCount: _chatHistory.length,
               itemBuilder: (context, index) {
+                final chat = _chatHistory[_chatHistory.length - 1 - index];
                 return ListTile(
-                  title: Text(_chatHistory[index]),
+                  title: Align(
+                    alignment: chat.startsWith('User') ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: chat.startsWith('User') ? Colors.grey : Colors.orange,
+                      ),
+                      child: Text(
+                        chat,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
           ),
-          if (_isWaiting) Text('Waiting for the chatbot...'),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+          if (_isWaiting)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
+          Padding(
+            padding: EdgeInsets.all(8),
             child: Row(
               children: [
                 Expanded(
@@ -115,17 +137,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _messageController,
                     decoration: InputDecoration(
                       hintText: 'Type your message...',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
+                  color: Colors.orange[200],
                   onPressed: _sendMessage,
                 ),
               ],
             ),
           ),
-          if (_chatbotReply.isNotEmpty) Text('Chatbot: $_chatbotReply'),
         ],
       ),
     );
